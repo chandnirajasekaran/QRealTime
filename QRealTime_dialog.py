@@ -91,8 +91,9 @@ def QVariantToODKtype(q_type):
             return 'decimal'
         else:
             return 'text'
+
 class QRealTimeDialog(QtWidgets.QDialog, FORM_CLASS):
-    services = ['Aggregate','Kobo']
+    services = ['Aggregate','Kobo', 'Central']
     def __init__(self, caller,parent=None):
         """Constructor."""
         super(QRealTimeDialog, self).__init__(parent)
@@ -624,6 +625,26 @@ class Aggregate (QTableWidget):
         except Exception as e:
             print ('not able to fetch',e)
             return response,table
+
+class Central (Aggregate):
+    tag="Central"
+    def __init__(self,parent,caller):
+        super(Central, self).__init__(parent,caller)
+        
+    def setParameters(self):
+        self.parameters =[
+        ["id","Central"],
+        ["url",''],
+        [self.tr("user"), ''],
+        [self.tr("password"), ''],
+        [self.tr("lastID"),''],
+        [self.tr('sync time'),3600]
+        ]
+        
+    def prepareSendForm(self, layer):
+        self.updateFields(layer)
+        fieldDict = self.getFieldsModel(layer)
+
 class Kobo (Aggregate):
     tag="KoboToobox"
     def __init__(self,parent,caller):
